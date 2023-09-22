@@ -19,7 +19,7 @@ if storage_type == 'db':
                                  ForeignKey('place_id'),
                                  primary_key=True,
                                  nullable=False)
-                )
+                          )
 
 
 class Place(BaseModel):
@@ -38,6 +38,8 @@ class Place(BaseModel):
         longitude = Column(Float, nullable=True)
         reviews = relationship('Review', backref='place',
                                cascade='all, delete, delete-orphan')
+        amenities = relationship('Amenity', secondary=place_amenity,
+                                 viewonly=False, backref='place_amenities')
     else:
 
         city_id = ""
@@ -67,3 +69,31 @@ class Place(BaseModel):
                 if review_.place_id == self.id:
                     review_list.append(review_)
             return review_list
+
+        @property
+        def amenities(self):
+            """
+                eturns the list of Amenity instances based
+                on the attribute amenity_ids that contains
+                all Amenity.id linked to the Place
+            """
+            from models import storage
+            amenities_list = []
+            amenities_ = storage.all(Amenity)
+            for amenity_ in amenities_.values():
+                if amenity_.id in self.amenity_ids:
+                    amenities_list.append(amenity_)
+            return amenities_list
+
+        @amenities.setter
+        def amenities(self, obj):
+            """
+                handles append method for adding an Amenity.id
+                to the attribute amenity_ids.
+                This method should accept only
+                Amenity object, otherwise, do nothing.
+            """
+            if obj is not None:
+                if isinstance(obj, Amenity):
+                    if obj.id not in self.amenity_ids:
+                        self.amenity_ids.append(obj.id)

@@ -10,8 +10,6 @@ from models.state import State
 from models.user import User
 
 
-
-
 class FileStorage:
     """Represent an abstracted storage engine.
 
@@ -22,7 +20,6 @@ class FileStorage:
     """
     __file_path = "file.json"
     __objects = {}
-
 
     def all(self, cls=None):
         """Return a dictionary of instantiated objects in __objects.
@@ -37,20 +34,18 @@ class FileStorage:
             return cls_dict
         return self.__objects
 
-
     def new(self, obj):
         """Set in __objects obj with key <obj_class_name>.id.
         """
         self.__objects["{}.{}".format(type(obj).__name__, obj.id)] = obj
 
-
     def save(self):
         """Serialize __objects to the JSON file __file_path.
         """
-        fs_odict = {o: self.__objects[o].to_dict() for o in self.__objects.keys()}
+        fs_odict = {o: self.__objects[o].to_dict()
+                    for o in self.__objects.keys()}
         with open(self.__file_path, "w", encoding="utf-8") as f:
             json.dump(fs_odict, f)
-
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists.
@@ -64,7 +59,6 @@ class FileStorage:
         except FileNotFoundError:
             pass
 
-
     def delete(self, obj=None):
         """Delete a given object from __objects, if it exists.
         """
@@ -72,7 +66,6 @@ class FileStorage:
             del self.__objects["{}.{}".format(type(obj).__name__, obj.id)]
         except (AttributeError, KeyError):
             pass
-
 
     def close(self):
         """Call the reload method.
