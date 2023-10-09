@@ -25,7 +25,7 @@ def do_deploy(archive_path):
         run('sudo tar -xzf /tmp/web_static{}.tgz -C \
             /data/web_static/releases/web_static_{}/\
             .format(ts, ts)')
-        run('sudo rm /tmp/web_static_{}.tgz'.fomrat(ts))
+        run('sudo rm /tmp/web_static_{}.tgz'.format(ts))
         run('sudo mv /data/web_static/releases/web_static_{}/\
             web_static/* /data/web_static/releases/web_static_{}/'
             .format(ts, ts))
