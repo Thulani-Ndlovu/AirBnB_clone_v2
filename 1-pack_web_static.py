@@ -11,7 +11,7 @@ from fabric.decorators import runs_once
 @runs_once
 def do_pack():
     '''Generate a .tgz archive'''
-    local("mdkir -p versions")
+    local("mkdir -p versions")
     path_ = ("versions/web_static_{}.tgz".
              format(datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")))
     outcome = local("tar -cvzf {} web_static".format(path_))
